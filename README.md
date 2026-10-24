@@ -1,8 +1,8 @@
-DS2023 - Trabajo Final Integrador (Grupo 17)
+Diseño de Sistemas - Trabajo Final Integrador
 
 📌 Descripción del Proyecto
 
-Este repositorio contiene el Trabajo Final Integrador (TFI) del curso/materia DS2023 (Grupo 17). El objetivo principal de este proyecto es abordar un problema real a través del ciclo completo de desarrollo, desde la adquisición y preparación de datos hasta el modelado predictivo, la evaluación de métricas y la posterior puesta en producción o presentación de resultados interactivos.
+Este repositorio contiene el Trabajo Final Integrador (TFI) de la materia Diseño De Sistemas. El objetivo principal de este proyecto es abordar un problema real a través del ciclo completo de desarrollo, desde la adquisición y preparación de datos hasta el modelado predictivo, la evaluación de métricas y la posterior puesta en producción o presentación de resultados interactivos.
 El trabajo refleja buenas prácticas de ingeniería de software y ciencia de datos, enfocándose en la modularidad, la reproducibilidad y la claridad en la presentación de hallazgos para perfiles técnicos y de negocio.
 
 🚀 Características Principales
