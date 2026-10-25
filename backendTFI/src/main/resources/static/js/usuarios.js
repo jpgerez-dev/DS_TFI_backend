@@ -7,11 +7,17 @@ $(document).ready(function() {
 });
 
 
-function actualizarUsuario(){
-    document.getElementById('txt-email-usuario').outerHTML= localStorage.email;
+// Evita inyección de HTML (XSS) al mostrar datos cargados por los usuarios
+function esc(valor){
+    return String(valor ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[c]));
 }
 
 
+function actualizarUsuario(){
+    document.getElementById('txt-email-usuario').textContent = localStorage.email || '';
+}
 
 
 function cargarUsuarios(){
@@ -22,9 +28,12 @@ function cargarUsuarios(){
       headers:getHeader()
     });
 
-
-
-
+    // Sin sesión válida: volver al login
+    if (request.status === 401) {
+        localStorage.clear();
+        window.location.href = 'login.html';
+        return;
+    }
 
     const usuarios = await request.json();
 
@@ -33,9 +42,9 @@ function cargarUsuarios(){
     for (let usuario of usuarios) {
         const telefono = usuario.telefono == null ? '-' : usuario.telefono;
 
-        const btnEliminar = '<a href=\"#\" class=\"btn btn-danger btn-circle btn-sm\" onclick="eliminarUsuario(' + usuario.id + ')">\n<i class=\"fas fa-trash\"></i>\n</a>';
-        let btnModificar = '<a href="#" class="btn btn-success btn-circle btn-sm" onclick="modificarUsuario('+usuario.id + usuario.nombre+')">\n<i class="fa-solid fa-pen-to-square"></i>\n</a>';
-        let usuarioHtml = `<tr><td>${usuario.id}</td><td>${usuario.nombre} ${usuario.apellido}</td><td>${usuario.email}</td><td>${telefono}</td>
+        const btnEliminar = '<a href="#" class="btn btn-danger btn-circle btn-sm" onclick="eliminarUsuario(' + Number(usuario.id) + ')">\n<i class="fas fa-trash"></i>\n</a>';
+        const btnModificar = '<a href="#" class="btn btn-success btn-circle btn-sm" onclick="modificarUsuario(' + Number(usuario.id) + ')">\n<i class="fa-solid fa-pen-to-square"></i>\n</a>';
+        let usuarioHtml = `<tr><td>${esc(usuario.id)}</td><td>${esc(usuario.nombre)} ${esc(usuario.apellido)}</td><td>${esc(usuario.email)}</td><td>${esc(telefono)}</td>
 <td>
 ${btnEliminar}
 ${btnModificar}
@@ -45,51 +54,46 @@ ${btnModificar}
         listadohtml += usuarioHtml;
 
     }
-    console.log(usuarios);
     document.querySelector('#usuarios tbody').outerHTML = listadohtml;
 
   })();
 }
 
 
-
-
-
 function getHeader(){
     return {
-        'Accept': 'application/Json',
-        'Content-type': 'application/Json',
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
         'Authorization': localStorage.token
     }
 
 }
 
 
-
-function  eliminarUsuario (id){
+function eliminarUsuario(id){
 
     if(!confirm('Desea Borrar?')){
         return
     }
 
     (async ()=>{
-        const request = await fetch("api/usuarios/eliminar/" +id,{
+        const request = await fetch("api/usuarios/eliminar/" + id,{
             method: 'DELETE',
             headers: getHeader()
         });
 
+        if (request.status === 401) {
+            localStorage.clear();
+            window.location.href = 'login.html';
+            return;
+        }
+        // Recargar recién cuando el servidor terminó de borrar
+        window.location.reload(false);
     })();
-    console.log('entramos en eliminar usuario');
-
-    window.location.reload(false);
 }
 
 
-function modificarUsuario(id,nombre){
-
-    console.log(nombre);
-
-    // window.location.href ="./modificarUsuario.html";
-    //modificarUsuarioActual(id);
-
+function modificarUsuario(id){
+    // Pendiente: la modificación de usuarios todavía no está implementada
+    console.log('Modificar usuario', id);
 }

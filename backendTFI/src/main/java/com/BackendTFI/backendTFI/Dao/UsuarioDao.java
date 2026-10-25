@@ -12,7 +12,9 @@ public interface UsuarioDao {
 
     void registrarUsuario(Usuario usuario);
 
-    public Usuario verificarUsuario(Usuario usuario);
+    Usuario verificarUsuario(Usuario usuario);
+
+    Usuario buscarUsuarioPorEmail(String email);
 
     void modificarUsuario(Long id);
 }

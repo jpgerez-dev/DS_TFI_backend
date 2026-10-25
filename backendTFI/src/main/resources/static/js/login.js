@@ -9,39 +9,22 @@ function iniciarSesion(){
     datos.email= document.getElementById('txtEmail').value;
     datos.password= document.getElementById('txtPassword').value;
 
-
-
     (async ()=>{
         const request = await fetch("api/login",{
             method: 'POST',
-            headers: getHeader(),
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify(datos)
         });
 
-        const response = await request.text();
-
-
-        if(response != "Fail"){
-            localStorage.token = response;
+        if (request.ok) {
+            localStorage.token = await request.text();
             localStorage.email = datos.email;
             window.location.href='usuarios.html';
-        }else {
+        } else {
             alert("Credenciales incorrectas, ingrese nuevamente");
         }
-
-
-
     })();
-}
-
-
-
-
-function getHeader(){
-    return {
-        'Accept': 'application/Json',
-        'Content-type': 'application/Json',
-        'Authorization': localStorage.token
-    }
-
 }

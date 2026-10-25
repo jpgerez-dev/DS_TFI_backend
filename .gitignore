@@ -1,0 +1,12 @@
+# Compilados y dependencias
+target/
+*.class
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Varios
+HELP.md
+.DS_Store

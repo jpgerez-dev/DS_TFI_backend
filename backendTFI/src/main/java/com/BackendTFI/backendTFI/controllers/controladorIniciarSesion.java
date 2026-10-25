@@ -3,9 +3,10 @@ package com.BackendTFI.backendTFI.controllers;
 import com.BackendTFI.backendTFI.Dao.UsuarioDao;
 import com.BackendTFI.backendTFI.Models.Usuario;
 import com.BackendTFI.backendTFI.utils.JWTUtil;
-import com.BackendTFI.backendTFI.utils.Sesion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class controladorIniciarSesion {
@@ -16,22 +17,14 @@ public class controladorIniciarSesion {
     @Autowired
     private JWTUtil jwtUtil;
 
-    @Autowired
-    private Sesion sesion;
+    @RequestMapping(value = "api/login", method = RequestMethod.POST)
+    public String login(@RequestBody Usuario usuario) {
 
-    @RequestMapping (value = "api/login", method = RequestMethod.POST)
-    public String login(@RequestBody Usuario usuario){
+        Usuario usuarioLogueado = usuarioDao.verificarUsuario(usuario);
 
-        Usuario usuariologueado = usuarioDao.verificarUsuario(usuario);
-
-        if( usuariologueado != null){
-            String tokenJWT = jwtUtil.create(String.valueOf(usuariologueado.getId()), usuariologueado.getEmail());
-            sesion.setUsuario(usuariologueado.getEmail());
-            System.out.println(sesion.getUsuario());
-            return tokenJWT;
-
-
+        if (usuarioLogueado == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
         }
-        return "Fail";
+        return jwtUtil.create(String.valueOf(usuarioLogueado.getId()), usuarioLogueado.getEmail());
     }
 }

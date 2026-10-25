@@ -29,7 +29,9 @@ public class UsuarioDaoImp implements UsuarioDao{
     @Override
     public void eliminarUsuario(Long id) {
         Usuario usuario = entityManager.find(Usuario.class, id);
-        entityManager.remove(usuario);
+        if (usuario != null) {
+            entityManager.remove(usuario);
+        }
 
     }
 
@@ -94,6 +96,7 @@ public class UsuarioDaoImp implements UsuarioDao{
 
 
 
+    @Override
     public Usuario buscarUsuarioPorEmail(String email) {
         String query = "FROM Usuario WHERE email= :email";
 

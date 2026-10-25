@@ -1,5 +1,6 @@
 package com.BackendTFI.backendTFI.Models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,8 @@ public class Usuario
     @Getter @Setter @Column(name="email")
     private String email;
     @Getter @Setter @Column(name="password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ToString.Exclude
     private String password;
     @Getter @Setter @Column(name="telefono")
     private String telefono;
